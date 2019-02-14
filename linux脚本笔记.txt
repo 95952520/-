@@ -1,0 +1,19 @@
+/sbin/service crond start //启动服务
+/sbin/service crond stop //关闭服务
+/sbin/service crond restart //重启服务
+/sbin/service crond reload //重新载入配置
+crontab -e 编辑
+crontab -l 列表
+chmod u+x *.sh 增加权限
+
+:set ff 查看文件格式
+:set ff=unix
+
+export PATH=${PATH}:/home/mysh //设置全局脚本目录  经测试，断开ssh连接后失效
+/usr/local/bin  //可全局执行脚本
+du -ah --max-depth=1    //查看文件夹占用空间
+
+activemq start/console/stop
+
+
+yum -y install docker

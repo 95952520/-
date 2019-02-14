@@ -1,0 +1,69 @@
+1.配置redis主从
+	master:
+		protected-mode no
+		port 6379
+		pidfile /var/run/redis_6379.pid
+		masterauth 连接密码
+		requirepass 连接密码
+		daemonize yes
+		注调bind: 127.0.0.1
+	slave1/slave2:
+		protected-mode no
+		port 6380/6381
+		pidfile /var/run/redis_6380.pid /var/run/redis_6381.pid
+		masterauth 连接密码
+		requirepass 连接密码
+		slaveof 127.0.0.1(外网ip) 6379
+		daemonize yes
+		注调bind: 127.0.0.1
+	启动命令(需启动3个):
+		/usr/redis/redis-master/src/redis-server /usr/redis/redis-master/redis.conf
+	参考资料:
+		http://www.cnblogs.com/zwcry/p/9046207.html
+2.配置redis哨兵
+	master/slave1/slave2:
+		protected-mode no
+		port 26379 26380 26381
+		dir "/usr/redis/redis-master"   "/usr/redis/redis-rep1"   "/usr/redis/redis-rep2"
+		sentinel monitor mymaster 127.0.0.1(外网ip) 6379 2
+		sentinel auth-pass mymaster 连接密码
+		daemonize yes
+		sentinel down-after-milliseconds mymaster 30000
+	启动命令(需启动3个):
+		/usr/redis/redis-master/src/redis-sentinel /usr/redis/redis-master/sentinel.conf --sentinel
+	参考资料:
+		http://www.cnblogs.com/LiZhiW/p/4851640.html
+		https://www.cnblogs.com/php-linux/p/6141431.html
+		https://www.cnblogs.com/zwcry/p/9134721.html
+3.springboot集成
+	pom依赖:
+		<dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+	yml配置:
+		spring:
+			redis:
+				database: 1
+				#host: 外网ip
+				port: 6379
+				timeout: 3000
+				lettuce:
+				  pool:
+					max-idle: 10
+					min-idle: 0
+					max-active: 1000
+					max-wait: -1
+				password: myRedis
+				sentinel:
+				  nodes: 外网ip:26379,外网ip:26380,外网ip:26381
+				  master: mymaster
+	参考资料:
+		https://www.cnblogs.com/zwcry/p/9156243.html
+4.其他参考资料及命令:
+	https://blog.csdn.net/u010297957/article/details/55050098
+	/usr/redis/redis-master/src/redis-cli -h localhost -p 26379
+	/usr/redis/redis-master/src/redis-cli
+		验证:auth 连接密码
+		查看信息:info
+	/usr/redis/redis-rep1/src/redis-cli -p 6380

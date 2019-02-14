@@ -1,0 +1,51 @@
+1.yum install mysql-community-server
+报错如下
+Loaded plugins: fastestmirror
+Loading mirror speeds from cached hostfile
+base                       | 3.6 kB  00:00:00
+epel                       | 3.2 kB  00:00:00
+extras                     | 3.4 kB  00:00:00
+mysql-connectors-community | 2.5 kB  00:00:00
+mysql-tools-community      | 2.5 kB  00:00:00
+mysql57-community          | 2.5 kB  00:00:00
+updates                    | 3.4 kB  00:00:00
+Resolving Dependencies
+--> Running transaction check
+---> Package mysql-community-server.x86_64 0:5.7.24-1.el6 will be installed
+--> Processing Dependency: libsasl2.so.2()(64bit) for package: mysql-community-server-5.7.24-1.el6.x86_64
+--> Finished Dependency Resolution
+Error: Package: mysql-community-server-5.7.24-1.el6.x86_64 (mysql57-community)
+           Requires: libsasl2.so.2()(64bit)
+ You could try using --skip-broken to work around the problem
+ You could try running: rpm -Va --nofiles --nodigest
+[root@grape package]# rpm -Va --nofiles --nodigest
+[root@grape package]# yum install mysql-community-server
+Loaded plugins: fastestmirror
+Loading mirror speeds from cached hostfile
+Resolving Dependencies
+--> Running transaction check
+---> Package mysql-community-server.x86_64 0:5.7.24-1.el6 will be installed
+--> Processing Dependency: libsasl2.so.2()(64bit) for package: mysql-community-server-5.7.24-1.el6.x86_64
+--> Finished Dependency Resolution
+Error: Package: mysql-community-server-5.7.24-1.el6.x86_64 (mysql57-community)
+           Requires: libsasl2.so.2()(64bit)
+ You could try using --skip-broken to work around the problem
+ You could try running: rpm -Va --nofiles --nodigest
+
+2.安装libsasl2.so.2
+http://www.rpmfind.net/linux/rpm2html/search.php?query=libsasl2.so.2()(64bit)
+wget下载上个网页的第一个文件
+rpm -ivh安装rpm
+3.yum install mysql-community-server
+4.启动服务
+service mysqld start
+5.查看初始密码
+grep 'temporary password' /var/log/mysqld.log
+6.登录mysql，命令：mysql -uroot -p
+7.修改密码set password for 'root'@'localhost'=password('MyNewPassword1!');
+8.修改密码报错
+ERROR 1819 (HY000): Your password does not satisfy the current policy requirements
+9.修改mysql密码强度set global validate_password_length=1;
+10.再次修改密码
+11.远程登录不了，开启mysql远程登录权限
+update user set host = '%' where user = 'root';

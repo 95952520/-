@@ -1,0 +1,12 @@
+mybatis返回复杂对象的成员变量为List<String> listName时的写法
+    <collection  property="listName" ofType="java.lang.String" javaType="list">
+        <result column="user_name" />
+    </collection>
+
+nohup java -jar XXX.jar &
+nohup java -jar XXX.jar >>XXX.out --spring.profiles.active=test &
+
+以下写法构建方便，但是本质是通过内部类构建的，无法序列化。同时也不符合规范
+List<String> list = new ArrayList<String>(){{
+    add("hello world");
+}};
