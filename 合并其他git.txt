@@ -1,0 +1,11 @@
+git remote -v
+	origin  https://local.git (fetch)
+	origin  https://local.git (push)
+git remote add other https://other.git
+git remote -v
+	other       https://other.git (fetch)
+	other       https://other.git (push)
+	origin  https://local.git (fetch)
+	origin  https://local.git (push)
+git fetch --no-tags other
+git merge other/dev
