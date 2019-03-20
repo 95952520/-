@@ -1,0 +1,6 @@
+logging:
+  config: classpath:logback-custom.xml
+
+log:
+  sysPath: /var/log/operationcenter/local/syslog
+  operatePath: /var/log/operationcenter/local/operatelog

@@ -1,0 +1,23 @@
+参考教程https://www.cnblogs.com/jiashengmei/p/8857053.html
+wget https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-6.5.4-x86_64.rpm
+wget https://artifacts.elastic.co/downloads/logstash/logstash-6.5.4.rpm
+wget https://artifacts.elastic.co/downloads/kibana/kibana-6.6.0-x86_64.rpm
+rpm --install 以上文件
+
+配置文件参考
+application.yaml
+logback-custom.xml
+filebeat.yml
+logstash-log.conf
+elasticsearch.yml
+
+启动命令
+nohup su elkuser bin/elasticsearch &
+nohup sudo /usr/share/filebeat/bin/filebeat -e -c /etc/filebeat/filebeat.yml -d "publish" &
+nohup /usr/share/logstash/bin/logstash -f /etc/logstash/conf.d/logstash-log.conf &
+nohup /usr/share/kibana/bin/kibana &
+
+验证elk是否安装成功命令
+curl 'localhost:9200/_cat/indices?v'
+验证elk是否安装成功页面地址
+localhost:9200

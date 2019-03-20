@@ -1,0 +1,83 @@
+yml配置
+spring:
+  datasource:
+    first:
+      name: firstDB
+      url: jdbc:mysql://localhost:3306/first?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=false
+      driver-class-name: com.mysql.jdbc.Driver
+      username: root
+      password: psd
+    second:
+      name: secondDB
+      url: jdbc:mysql://localhost:3306/second?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=false
+      driver-class-name: com.mysql.jdbc.Driver
+      username: root
+      password: psd
+
+dataSource配置
+@Configuration
+public class DataSourceConfig {
+    @Bean(name = "firstDataSourceProperties")
+    @ConfigurationProperties(prefix = "spring.datasource.first")
+    public DataSourceProperties firstDataSourceProperties() {
+        return new DataSourceProperties();
+    }
+    @Bean(name = "firstDataSource")
+    public DataSource firstDataSource() {
+        return firstDataSourceProperties().initializeDataSourceBuilder().build();
+    }
+    @Primary
+    @Bean(name = "secondDataSourceProperties")
+    @ConfigurationProperties(prefix = "spring.datasource.second")
+    public DataSourceProperties secondDataSourceProperties() {
+        return new DataSourceProperties();
+    }
+    @Primary
+    @Bean(name = "secondDataSource")
+    public DataSource secondDataSource() {
+        return secondDataSourceProperties().initializeDataSourceBuilder().build();
+    }
+}
+
+mybatis数据源配置
+@Configuration
+@MapperScan(basePackages = {"指定目录"}, annotationClass = Mapper.class, sqlSessionFactoryRef = "firstSessionFactory")
+public class FirstMybatisConfig {
+    @Bean(name = "firstSessionFactory")
+    public SqlSessionFactoryBean sqlSessionFactory(@Qualifier("firstDataSource") DataSource dataSource) throws IOException {
+        SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
+        sqlSessionFactoryBean.setDataSource(dataSource);
+        ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+        Resource mybatisConfigXml = resolver.getResource("classpath:mybatis-config.xml");
+        sqlSessionFactoryBean.setConfigLocation(mybatisConfigXml);
+        Resource[] mapperXmls = resolver.getResources("classpath*:mapper/**/*.xml");
+        sqlSessionFactoryBean.setMapperLocations(mapperXmls);
+        return sqlSessionFactoryBean;
+    }
+
+    @Bean(name = "firstTransactionManager")
+    public DataSourceTransactionManager rentTransactionManager(@Qualifier("firstDataSource") DataSource dataSource) {
+        return new DataSourceTransactionManager(dataSource);
+    }
+}
+@Configuration
+@MapperScan(firstPackages = {"指定目录"}, annotationClass = Mapper.class, sqlSessionFactoryRef = "secondSessionFactory")
+public class MybatisConfig {
+    @Primary
+    @Bean(name = "secondSessionFactory")
+    public SqlSessionFactoryBean sqlSessionFactory(@Qualifier("secondDataSource") DataSource dataSource) throws IOException {
+        SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
+        sqlSessionFactoryBean.setDataSource(dataSource);
+        ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+        Resource mybatisConfigXml = resolver.getResource("classpath:mybatis-config.xml");
+        sqlSessionFactoryBean.setConfigLocation(mybatisConfigXml);
+        Resource[] mapperXmls = resolver.getResources("classpath*:mapper/**/*.xml");
+        sqlSessionFactoryBean.setMapperLocations(mapperXmls);
+        return sqlSessionFactoryBean;
+    }
+    @Primary
+    @Bean(name = "secondTransactionManager")
+    public DataSourceTransactionManager secondTransactionManager(@Qualifier("secondDataSource") DataSource dataSource) {
+        return new DataSourceTransactionManager(dataSource);
+    }
+}

@@ -28,3 +28,6 @@ deploy时的pom.xml
             <url>http://localhost:8081/repository/maven-3rd/</url>
         </snapshotRepository>
     </distributionManagement>
+
+
+打包源码：https://www.cnblogs.com/blueskyli/p/9924678.html
