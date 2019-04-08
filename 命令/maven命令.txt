@@ -1,0 +1,2 @@
+设置版本号
+mvn versions:set -DnewVersion=cfc-1.0.0-SNAPSHOT
