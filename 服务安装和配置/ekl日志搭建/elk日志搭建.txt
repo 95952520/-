@@ -12,12 +12,23 @@ logstash-log.conf
 elasticsearch.yml
 
 启动命令
-nohup su elkuser bin/elasticsearch &
+nohup su elkuser /usr/local/elasticsearch-6.6.2/bin/elasticsearch &
 nohup sudo /usr/share/filebeat/bin/filebeat -e -c /etc/filebeat/filebeat.yml -d "publish" &
 nohup /usr/share/logstash/bin/logstash -f /etc/logstash/conf.d/logstash-log.conf &
 nohup /usr/share/kibana/bin/kibana &
+
+nohup su elkuser /usr/local/elasticsearch-6.6.2/bin/elasticsearch >>/usr/local/elasticsearch-6.6.2/elastic.log &
+nohup /usr/share/filebeat/bin/filebeat -e -c /etc/filebeat/filebeat.yml -d "publish" >>/etc/filebeat/filebeat.log &
+nohup /usr/share/logstash/bin/logstash  >>/etc/logstash/logstash.log &
+nohup /usr/share/logstash/bin/logstash --path.settings=/etc/logstash  >>/etc/logstash/logstash.log &
 
 验证elk是否安装成功命令
 curl 'localhost:9200/_cat/indices?v'
 验证elk是否安装成功页面地址
 localhost:9200
+查看集群
+curl -XGET 'http://localhost:9200/_cat/nodes'
+
+
+参考资料
+https://www.jianshu.com/p/413f7e0a889f

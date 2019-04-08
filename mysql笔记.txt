@@ -34,8 +34,8 @@ DECLARE done INT DEFAULT FALSE;
 
 -- mysql游标
 DECLARE cur CURSOR FOR
-SELECT steam_id
-FROM Year_End_Inventory;
+SELECT id
+FROM table;
 /*将结束标志绑定到游标*/
 DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
 /*打开游标*/
@@ -43,13 +43,13 @@ OPEN cur;
 /*开始循环*/
 read_loop: LOOP
 /*提取游标里的数据，这里只有一个，多个的话也一样*/
-FETCH cur INTO steamid;
+FETCH cur INTO id;
     /*声明结束的时候*/
     IF done THEN
         LEAVE read_loop;
     END IF;
     /*这里做你想做的循环的事件*/
-    call USP_Year_End_Inventory_FRIEND_PLAY(steamid);
+    update table set XXX = XXX;
 END LOOP;
 /*关闭游标*/
 CLOSE cur;

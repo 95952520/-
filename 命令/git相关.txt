@@ -1,3 +1,4 @@
+合并其他远程仓库到本地
 git remote -v
 	origin  https://local.git (fetch)
 	origin  https://local.git (push)
@@ -9,3 +10,7 @@ git remote -v
 	origin  https://local.git (push)
 git fetch --no-tags other
 git merge other/dev
+
+git撤销commit
+git log
+git reset --hard log中的版本号

@@ -31,3 +31,4 @@ deploy时的pom.xml
 
 
 打包源码：https://www.cnblogs.com/blueskyli/p/9924678.html
+pom.xml配置详解：https://blog.csdn.net/u012152619/article/details/51485297
