@@ -1,0 +1,34 @@
+ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+HttpServletRequest request = attributes.getRequest();
+String userAgent = request.getHeader("User-Agent");
+String hostIp = null;
+try {
+    hostIp = InetAddress.getLocalHost().getHostAddress();
+} catch (UnknownHostException e) {
+    e.printStackTrace();
+}
+setClientIp(ServletUtil.getClientIP(request));
+setBrowser(UserAgentUtil.parse(userAgent).getBrowser().toString());
+setHeader(getHeaderMap(request));
+setUrl(request.getRequestURI());
+setRequestArgs(getJsonParams(request.getParameterMap()));
+setHostIp(hostIp);
+setRequestMethod(StrUtil.isBlank(request.getMethod())?"未知请求":request.getMethod());
+
+private static Map<String, String> getHeaderMap(HttpServletRequest request) {
+    Enumeration<String> names = request.getHeaderNames();
+    Map<String, String> headerMap = new HashMap<>();
+    while (names.hasMoreElements()) {
+        String name = names.nextElement();
+        headerMap.put(name, request.getHeader(name));
+    }
+    return headerMap;
+}
+
+private static String getJsonParams(Map<String, String[]> map) {
+    Map<String, String> paramsMap = new HashMap<>();
+    for (Map.Entry<String, String[]> entry : map.entrySet()) {
+        paramsMap.put(entry.getKey(), entry.getValue()[0]);
+    }
+    return JSON.toJSONString(paramsMap);
+}

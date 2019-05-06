@@ -10,3 +10,7 @@ nohup java -jar XXX.jar >>XXX.out --spring.profiles.active=test &
 List<String> list = new ArrayList<String>(){{
     add("hello world");
 }};
+
+url转码
+前端：encodeURIComponent("{appcode:'pf'}");
+后端：String utf8 = URLDecoder.decode(s, "utf8");

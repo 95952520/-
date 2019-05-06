@@ -1,0 +1,36 @@
+http://www.open-open.com/lib/view/open1438774288692.html
+Redis 双主实现
+
+https://blog.csdn.net/oanqoanq/article/details/51281548
+redis优缺点总结
+
+http://www.chenxm.cc/article/617.html
+Redis常见的使用方式：单副本、主从、哨兵、集群
+
+https://www.cnblogs.com/taosim/articles/4238674.html
+Redis分布式部署，一致性hash;分布式与缓存队列
+
+http://www.redis.cn/topics/cluster-tutorial.html
+中文官网redis集群教程
+
+http://www.talkwithtrend.com/Question/230779
+redis不同集群方案对比
+
+https://blog.csdn.net/u014209205/article/details/82113258
+最全的Redis高可用技术解决方案
+
+
+主从+哨兵模式的缺点
+1、主备模式，过于单一，特别是主服务器宕机的情况下，数据没法写入。
+2、业务发展，数据庞大，主备必须同步相同数据，对存储需求较大，有点多余
+3、虽然说有sentinel，但是效率还是非常低
+4、redis主从模式并不能保证数据的100%完整，在网络故障、主库宕机等情况下提升slave为master时可能会丢失部分数据，假如在某个时刻master的数据还未完全传播给slave时，master宕机等情况发生并将slave提升为master，这时原来master未传播的一部分数据将丢失。
+5、即使有了主从复制，每个数据库都要保存整个集群中的所有数据，容易形成木桶效应。
+
+redis集群缺点
+1、	多键的命令操作（如MGET、MSET），如果每个键都位于同一个节点，则可以正常支持，否则会提示错误。
+2、	集群中的节点只能使用0号数据库，如果执行SELECT切换数据库会提示错误。
+Redis 并不能保证数据的强一致性. 这意味这在实际中集群在特定的条件下可能会丢失写操作.
+
+jedis集群
+使用Jedis实现了分片集群，是由客户端控制哪些key数据保存到哪个数据库中，如果在水平扩容时就必须手动进行数据迁移，而且需要将整个集群停止服务，这样做非常不好的。
